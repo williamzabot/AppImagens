@@ -6,8 +6,9 @@ import kotlinx.coroutines.launch
 
 class UploadViewModel(private val imagemRepository: ImagemRepository) : ViewModel() {
 
-    private val _mensagemEvento = MutableLiveData<String>()
-    val mensagemEvento: LiveData<String> get() = _mensagemEvento
+    private val _imagemSalva = MutableLiveData<Boolean>()
+    val imagemSalva: LiveData<Boolean> get() = _imagemSalva
+
 
     fun addImagem(
         titulo: String,
@@ -15,7 +16,7 @@ class UploadViewModel(private val imagemRepository: ImagemRepository) : ViewMode
     ) {
         viewModelScope.launch {
             imagemRepository.insereImagem(titulo, foto)
-            _mensagemEvento.postValue("Imagem salva com sucesso!")
+            _imagemSalva.postValue(true)
         }
     }
 

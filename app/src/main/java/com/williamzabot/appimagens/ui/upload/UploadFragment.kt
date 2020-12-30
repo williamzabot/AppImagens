@@ -10,16 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.room.RoomDatabase
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.williamzabot.appimagens.R
 import com.williamzabot.appimagens.data.AppDatabase
-import com.williamzabot.appimagens.data.dao.ImagemDAO
-import com.williamzabot.appimagens.data.repository.imagem.ImagemRepository
 import com.williamzabot.appimagens.data.repository.imagem.ImagemRepositoryImpl
+import com.williamzabot.appimagens.extensions.hideKeyboard
 import java.io.ByteArrayOutputStream
 
 const val ESCOLHER_IMAGEM_REQUISICAO = 1
@@ -66,16 +66,23 @@ class UploadFragment : Fragment() {
     }
 
     private fun observaEventos() {
-        viewModel.mensagemEvento.observe(viewLifecycleOwner) {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        viewModel.imagemSalva.observe(viewLifecycleOwner) {
+            Toast.makeText(context, "Imagem salva com sucesso", Toast.LENGTH_SHORT).show()
+            clearUI()
         }
+    }
+
+    private fun clearUI() {
+        (requireActivity() as AppCompatActivity).hideKeyboard()
+        imageView.setImageDrawable(getDrawable(requireContext(), R.drawable.cameraicone))
+        editTextTituloImg.text = null
+        imageBitmap = null
     }
 
     private fun eventoCliques() {
         cliqueBotaoGaleria()
         cliqueBotaoCamera()
         cliqueBotaoSalvar()
-
     }
 
     private fun cliqueBotaoCamera() {
@@ -100,7 +107,13 @@ class UploadFragment : Fragment() {
         botaoSalvar.setOnClickListener {
             if (imageBitmap != null) {
                 val byteArray = converteBitmapParaByteArray(imageBitmap!!)
-                viewModel.addImagem(editTextTituloImg.text?.toString() ?: "Sem título", byteArray)
+                var titulo: String? = null
+                editTextTituloImg.text.toString().run {
+                    if (this.isNotEmpty()) {
+                        titulo = this
+                    }
+                }
+                viewModel.addImagem(titulo ?: "Sem título", byteArray)
             } else {
                 Toast.makeText(context, "Imagem não encontrada!", Toast.LENGTH_LONG).show()
             }

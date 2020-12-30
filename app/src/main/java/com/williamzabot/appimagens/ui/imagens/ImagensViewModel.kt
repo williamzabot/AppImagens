@@ -10,10 +10,15 @@ class ImagensViewModel(private val imagemRepository: ImagemRepository) : ViewMod
     private val _imagens = MutableLiveData<List<Imagem>>()
     val imagens: LiveData<List<Imagem>> get() = _imagens
 
+    private val _mensagem = MutableLiveData<String>()
+    val mensagem: LiveData<String> get() = _mensagem
+
+
     fun deletaImagem(id: Long) {
         viewModelScope.launch {
             imagemRepository.deletaImagem(id)
-        }
+            _mensagem.postValue("Imagem deletada com sucesso!")
+        }.invokeOnCompletion { getImagens() }
     }
 
     fun getImagens() {
@@ -21,7 +26,6 @@ class ImagensViewModel(private val imagemRepository: ImagemRepository) : ViewMod
             _imagens.postValue(imagemRepository.getImagens())
         }
     }
-
 
     class ViewModelFactory(private val dataSource: ImagemRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
