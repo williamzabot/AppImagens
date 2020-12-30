@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botao_abre_galeria"
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-black"
+            android:backgroundTint="@color/teal_700"
+            android:text="Selecionar foto"
+            app:cornerRadius="10dp"
+            android:textSize="14sp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintEnd_toStartOf="@+id/botao_abre_camera"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botao_abre_camera"
+            android:layout_width="155dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:fontFamily="sans-serif-black"
+            android:text="Tirar foto"
+            android:textSize="14sp"
+            app:cornerRadius="12dp"
+            android:backgroundTint="@color/teal_700"
+            android:layout_marginStart="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/botao_abre_galeria"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imagem_upload"
+            android:layout_width="382dp"
+            android:layout_height="290dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/cameraicone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/botao_abre_galeria" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fotos_layout_titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imagem_upload">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edittext_titulo_imagem"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Título da Imagem"
+                android:backgroundTint="@android:color/white"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botao_salvar_imagem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Salvar Imagem"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/fotos_layout_titulo"
+            android:layout_marginStart="55dp"
+            android:layout_marginEnd="55dp"
+            android:layout_marginTop="20dp"
+            app:cornerRadius="12dp"
+            android:backgroundTint="@android:color/holo_purple"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
