@@ -8,11 +8,12 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -28,7 +29,7 @@ const val TIRAR_FOTO_REQUISICAO = 2
 class UploadFragment : Fragment() {
 
     private lateinit var editTextTituloImg: TextInputEditText
-    private lateinit var imageView: ImageView
+    private lateinit var imageView: AppCompatImageView
     private lateinit var botaoSalvar: MaterialButton
     private lateinit var botaoAbreGaleria: MaterialButton
     private lateinit var botaoAbreCamera: MaterialButton
@@ -66,15 +67,16 @@ class UploadFragment : Fragment() {
     }
 
     private fun observaEventos() {
-        viewModel.imagemSalva.observe(viewLifecycleOwner) {
+        viewModel.imagemSalva.observe(viewLifecycleOwner,  Observer {
             Toast.makeText(context, "Imagem salva com sucesso", Toast.LENGTH_SHORT).show()
             clearUI()
-        }
+        })
+
     }
 
     private fun clearUI() {
         (requireActivity() as AppCompatActivity).hideKeyboard()
-        imageView.setImageDrawable(getDrawable(requireContext(), R.drawable.cameraicone))
+        imageView.setImageDrawable(getDrawable(requireContext(), android.R.drawable.ic_menu_camera))
         editTextTituloImg.text = null
         imageBitmap = null
     }
