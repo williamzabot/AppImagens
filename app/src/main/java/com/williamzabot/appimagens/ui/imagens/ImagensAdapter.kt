@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.williamzabot.appimagens.R
 import com.williamzabot.appimagens.data.entity.Imagem
 import java.io.ByteArrayInputStream
@@ -36,9 +37,8 @@ class ImagensAdapter : RecyclerView.Adapter<ImagensAdapter.ImagemViewHolder>() {
         private val tituloImagem = itemView.findViewById<TextView>(R.id.titulo_imagem)
 
         fun bind(imagem: Imagem) {
-            tituloImagem.text = imagem.titulo
-            val foto = converteByteArrayParaBitmap(imagem.foto)
-            imageView.setImageBitmap(foto)
+            tituloImagem.text = imagem.imagemTitulo
+            Glide.with(imageView).load(imagem.imagemURL).into(imageView)
         }
 
         private fun converteByteArrayParaBitmap(imgByteArray: ByteArray): Bitmap {

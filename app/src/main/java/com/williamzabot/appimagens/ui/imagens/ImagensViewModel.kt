@@ -3,27 +3,26 @@ package com.williamzabot.appimagens.ui.imagens
 import androidx.lifecycle.*
 import com.williamzabot.appimagens.data.entity.Imagem
 import com.williamzabot.appimagens.data.repository.imagem.ImagemRepository
+import com.williamzabot.appimagens.data.singleton.References.realtime
 import kotlinx.coroutines.launch
 
 class ImagensViewModel(private val imagemRepository: ImagemRepository) : ViewModel() {
 
-    private val _imagens = MutableLiveData<List<Imagem>>()
-    val imagens: LiveData<List<Imagem>> get() = _imagens
+    private val _imagemDeletada = MutableLiveData<String>()
+    val imagemDeletada: LiveData<String> get() = _imagemDeletada
 
-    private val _mensagem = MutableLiveData<String>()
-    val mensagem: LiveData<String> get() = _mensagem
+    private val _falhaAoDeletar = MutableLiveData<Boolean>()
+    val falhaAoDeletar: LiveData<Boolean> get() = _falhaAoDeletar
 
-
-    fun deletaImagem(id: Long) {
-        viewModelScope.launch {
-            imagemRepository.deletaImagem(id)
-            _mensagem.postValue("Imagem deletada com sucesso!")
-        }.invokeOnCompletion { getImagens() }
-    }
-
-    fun getImagens() {
-        viewModelScope.launch {
-            _imagens.postValue(imagemRepository.getImagens())
+    fun deletaImagem(id: String) {
+        imagemRepository.deletaImagem(id).addOnSuccessListener {
+            realtime.child(id).removeValue().addOnSuccessListener {
+                _imagemDeletada.postValue("Imagem deletada com sucesso!")
+            }.addOnFailureListener {
+                _falhaAoDeletar.postValue(true)
+            }
+        }.addOnFailureListener {
+            _falhaAoDeletar.postValue(true)
         }
     }
 

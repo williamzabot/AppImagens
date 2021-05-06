@@ -1,11 +1,13 @@
 package com.williamzabot.appimagens.data.entity
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+class Imagem(){
+    var id: String = ""
+    var imagemTitulo: String = ""
+    var imagemURL: String = ""
 
-@Entity(tableName = "imagens")
-data class Imagem(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val titulo: String,
-    val foto: ByteArray
-)
+    constructor(id: String, imagemTitulo: String, imagemURL: String) : this() {
+        this.id = id
+        this.imagemTitulo = imagemTitulo
+        this.imagemURL = imagemURL
+    }
+}

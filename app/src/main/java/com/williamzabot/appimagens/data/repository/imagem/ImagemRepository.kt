@@ -1,12 +1,13 @@
 package com.williamzabot.appimagens.data.repository.imagem
 
+import android.net.Uri
+import com.google.android.gms.tasks.Task
+import com.google.firebase.storage.UploadTask
 import com.williamzabot.appimagens.data.entity.Imagem
 
 interface ImagemRepository {
 
-    suspend fun insereImagem(titulo : String, foto : ByteArray): Long
+    fun insereImagem(uri: Uri, id : String): UploadTask
 
-    suspend fun deletaImagem(id: Long)
-
-    suspend fun getImagens(): List<Imagem>
+    fun deletaImagem(id: String): Task<Void>
 }

@@ -1,23 +1,18 @@
 package com.williamzabot.appimagens.data.repository.imagem
 
-import com.williamzabot.appimagens.data.dao.ImagemDAO
-import com.williamzabot.appimagens.data.entity.Imagem
+import android.net.Uri
+import com.google.android.gms.tasks.Task
+import com.google.firebase.storage.UploadTask
+import com.williamzabot.appimagens.data.singleton.References.storage
 
-class ImagemRepositoryImpl(private val imagemDAO: ImagemDAO) : ImagemRepository {
+class ImagemRepositoryImpl : ImagemRepository {
 
-    override suspend fun insereImagem(titulo: String, foto: ByteArray): Long {
-        return imagemDAO.insert(
-            Imagem(
-                titulo = titulo,
-                foto = foto
-            )
-        )
+    override fun insereImagem(uri : Uri, id : String): UploadTask {
+       return storage.child(id).putFile(uri)
     }
 
-    override suspend fun deletaImagem(id: Long) {
-        imagemDAO.delete(id)
+    override fun deletaImagem(id: String): Task<Void> {
+        return storage.child(id).delete()
     }
-
-    override suspend fun getImagens() = imagemDAO.getImagens()
 
 }

@@ -6,28 +6,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.williamzabot.appimagens.R
-import com.williamzabot.appimagens.data.AppDatabase
 import com.williamzabot.appimagens.data.entity.Imagem
 import com.williamzabot.appimagens.data.repository.imagem.ImagemRepositoryImpl
+import com.williamzabot.appimagens.data.singleton.References.realtime
 
 class ImagensFragment : Fragment() {
 
     private lateinit var recyclerViewImagens: RecyclerView
     private lateinit var viewModel: ImagensViewModel
     private val imagensAdapter by lazy { ImagensAdapter() }
-    private var listaImagens = listOf<Imagem>()
+    private var listaImagens = mutableListOf<Imagem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
             viewModelStore, ImagensViewModel.ViewModelFactory(
-                ImagemRepositoryImpl(
-                    AppDatabase.getInstance(requireContext()).imagemDAO
-                )
+                ImagemRepositoryImpl()
             )
         ).get(ImagensViewModel::class.java)
     }
@@ -42,25 +44,44 @@ class ImagensFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerViewImagens = view.findViewById(R.id.recyclerViewImagens)
+        recyclerViewImagens.adapter = imagensAdapter
         itemTouchHelper().attachToRecyclerView(recyclerViewImagens)
         observaEventos()
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.getImagens()
+        getImagens()
+    }
+
+    fun getImagens() {
+        listaImagens.clear()
+        realtime.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (postSnapshot in snapshot.children) {
+                    val img = postSnapshot.getValue(Imagem::class.java)
+                    img?.let {
+                        listaImagens.add(img)
+                    }
+                }
+                imagensAdapter.imagens = listaImagens
+            }
+        })
     }
 
     private fun observaEventos() {
-        viewModel.imagens.observe(viewLifecycleOwner) { imagens ->
-            listaImagens = imagens
-            recyclerViewImagens.adapter = imagensAdapter
-            imagensAdapter.imagens = imagens
-        }
+        viewModel.imagemDeletada.observe(viewLifecycleOwner, Observer {msg ->
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            getImagens()
+        })
 
-        viewModel.mensagem.observe(viewLifecycleOwner) {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
+        viewModel.falhaAoDeletar.observe(viewLifecycleOwner, Observer {
+            Toast.makeText(context, "Falha ao deletar", Toast.LENGTH_SHORT).show()
+            getImagens()
+        })
     }
 
     private fun itemTouchHelper(): ItemTouchHelper {
