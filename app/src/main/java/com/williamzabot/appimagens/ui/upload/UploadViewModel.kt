@@ -31,7 +31,7 @@ class UploadViewModel(private val imagemRepository: ImagemRepository) : ViewMode
     ) {
         val id = System.currentTimeMillis().toString()
         imagemRepository.insereImagem(foto, id).addOnSuccessListener {
-            storage.child(id).downloadUrl.addOnSuccessListener { downloadUrl ->
+            storage.child("images/$id").downloadUrl.addOnSuccessListener { downloadUrl ->
                 val imagem = Imagem(id, titulo, downloadUrl.toString())
                 realtime.child(imagem.id).setValue(imagem)
                     .addOnSuccessListener {

@@ -8,11 +8,11 @@ import com.williamzabot.appimagens.data.singleton.References.storage
 class ImagemRepositoryImpl : ImagemRepository {
 
     override fun insereImagem(uri : Uri, id : String): UploadTask {
-       return storage.child(id).putFile(uri)
+       return storage.child("images/$id").putFile(uri)
     }
 
     override fun deletaImagem(id: String): Task<Void> {
-        return storage.child(id).delete()
+        return storage.child("images/$id").delete()
     }
 
 }

@@ -5,7 +5,7 @@ import com.google.firebase.storage.FirebaseStorage
 
 object References {
 
-    val storage = FirebaseStorage.getInstance().reference.child("images/")
+    val storage = FirebaseStorage.getInstance().reference
     val realtime = FirebaseDatabase.getInstance().getReference("imagens/")
 
 }
